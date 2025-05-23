@@ -12,6 +12,7 @@ class EstatisticasJogadorCreate(EstatisticasJogadorBase):
     pass
 
 class EstatisticasJogadorUpdate(BaseModel):
+    nome_jogador: str
     gols: int
     assistencias: int
     passes_completos: int

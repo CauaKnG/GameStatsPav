@@ -9,11 +9,23 @@ router = APIRouter( tags=["Jogadores"])
 
 @router.post("/", response_model=jogador_schema.JogadorResponse)
 def criar_jogador(jogador: jogador_schema.JogadorCreate, db: Session = Depends(get_db)):
+    clube = db.query(models.Clube).filter(models.Clube.nome == jogador.clube_nome).first()
+    if not clube:
+        raise HTTPException(status_code=404, detail="Clube não encontrado")
+
+    novo_jogador = models.Jogador(
+        nome=jogador.nome,
+        idade=jogador.idade,
+        posicao=jogador.posicao,
+        overall=jogador.overall,
+        clube_id=clube.id
+    )
     try:
-        novo_jogador = models.Jogador(**jogador.dict())
         return jogador_service.adicionar_jogador(db, novo_jogador)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
 
 
 @router.get("/", response_model=list[jogador_schema.JogadorResponse])
@@ -31,8 +43,20 @@ def obter_jogador(jogador_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{jogador_id}", response_model=jogador_schema.JogadorResponse)
 def atualizar_jogador(jogador_id: int, jogador_dados: jogador_schema.JogadorUpdate, db: Session = Depends(get_db)):
+    clube = db.query(models.Clube).filter(models.Clube.nome == jogador_dados.clube_nome).first()
+    if not clube:
+        raise HTTPException(status_code=404, detail="Clube não encontrado")
+
+    dados_atualizados = {
+        "nome": jogador_dados.nome,
+        "idade": jogador_dados.idade,
+        "posicao": jogador_dados.posicao,
+        "overall": jogador_dados.overall,
+        "clube_id": clube.id
+    }
+
     try:
-        return jogador_service.editar_jogador(db, jogador_id, jogador_dados.dict())
+        return jogador_service.editar_jogador(db, jogador_id, dados_atualizados)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

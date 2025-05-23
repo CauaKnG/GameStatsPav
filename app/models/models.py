@@ -60,6 +60,7 @@ class EstatisticaJogador(Base):
     id = Column(Integer, primary_key=True, index=True)
     jogador_id = Column(Integer, ForeignKey('jogadores.id'))
     partida_id = Column(Integer, ForeignKey('partidas.id'))
+    nome_jogador = Column(String(100))
     gols = Column(Integer)
     assistencias = Column(Integer)
     passes_completos = Column(Integer)

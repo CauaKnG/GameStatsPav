@@ -1,19 +1,29 @@
 from pydantic import BaseModel
 
-class JogadorBase(BaseModel):
+class JogadorCreate(BaseModel):
     nome: str
     idade: int
     posicao: str
-    clube_id: int
+    overall: int
+    clube_nome: str
 
-class JogadorCreate(JogadorBase):
+class JogadorUpdate(JogadorCreate):
     pass
 
-class JogadorUpdate(JogadorBase):
-    pass
-
-class JogadorResponse(JogadorBase):
+class ClubeResponse(BaseModel):
     id: int
+    nome: str
+
+    class Config:
+        orm_mode = True
+
+class JogadorResponse(BaseModel):
+    id: int
+    nome: str
+    idade: int
+    posicao: str
+    overall: int
+    clube: ClubeResponse
 
     class Config:
         orm_mode = True
