@@ -1,25 +1,40 @@
 from pydantic import BaseModel, Field
-from datetime import date
 from typing import Optional
+from datetime import date
+
+class JogadorSimples(BaseModel):
+    nome: str
+
+    class Config:
+        orm_mode = True
 
 class LesaoBase(BaseModel):
-    jogador_id: int = Field(..., example=1)
-    tipo: str = Field(..., example="Lesão muscular")
-    descricao: Optional[str] = Field(None, example="Lesão na coxa")
+    nome_jogador: str = Field(..., example="Neymar Jr")  # antes era jogador_id
+    tipo_lesao: str = Field(..., example="Lesão muscular")
     data_lesao: date = Field(..., example="2025-07-15")
     duracao_estimada_dias: int = Field(..., example=30)
+
+    class Config:
+        orm_mode = True
+        allow_population_by_field_name = True
 
 class LesaoCreate(LesaoBase):
     pass
 
 class LesaoUpdate(BaseModel):
-    tipo: Optional[str]
-    descricao: Optional[str]
+    tipo_lesao: Optional[str]
     data_lesao: Optional[date]
     duracao_estimada_dias: Optional[int]
+    nome_jogador: Optional[str]
 
-class LesaoResponse(LesaoBase):
+
+
+class LesaoResponse(BaseModel):
     id: int
+    jogador_id: int
+    tipo_lesao: str
+    data_lesao: date
+    nome_jogador: str
 
     class Config:
         orm_mode = True
