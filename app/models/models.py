@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Enum, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Boolean, Date
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 import enum
@@ -44,7 +44,8 @@ class Jogador(Base):
 class Partida(Base):
     __tablename__ = 'partidas'
     id = Column(Integer, primary_key=True, index=True)
-    data_partida = Column(Date, nullable=False)
+    data_partida = Column(DateTime, nullable=False)  
+    local = Column(String, nullable=False) 
     clube_casa_id = Column(Integer, ForeignKey('clubes.id'))
     clube_fora_id = Column(Integer, ForeignKey('clubes.id'))
     gols_casa = Column(Integer)
