@@ -24,10 +24,8 @@ def criar_jogador(jogador: jogador_schema.JogadorCreate, db: Session = Depends(g
         return jogador_service.adicionar_jogador(db, novo_jogador)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-
-
-
+    
+    
 @router.get("/", response_model=list[jogador_schema.JogadorResponse])
 def listar_jogadores(db: Session = Depends(get_db)):
     return db.query(models.Jogador).all()

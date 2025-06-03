@@ -5,7 +5,6 @@ from app.validators import (
 )
 from sqlalchemy.orm import Session
 
-# Função para adicionar um jogador
 def adicionar_jogador(db: Session, jogador: Jogador):
     validar_posicao(jogador.posicao)
     db.add(jogador)
@@ -13,7 +12,6 @@ def adicionar_jogador(db: Session, jogador: Jogador):
     db.refresh(jogador)
     return jogador
 
-# Função para editar jogador
 def editar_jogador(db: Session, jogador_id: int, jogador_dados: dict):
     jogador = db.query(Jogador).filter(Jogador.id == jogador_id).first()
     if not jogador:
@@ -27,7 +25,6 @@ def editar_jogador(db: Session, jogador_id: int, jogador_dados: dict):
     db.refresh(jogador)
     return jogador
 
-# Função para adicionar estatísticas ao jogador
 def registrar_estatisticas(db: Session, jogador_id: int, partida_id: int, estatisticas: EstatisticaJogador):
     validar_estatisticas(estatisticas)
     validar_participacao_jogador(partida_id, jogador_id, db)

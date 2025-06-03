@@ -11,8 +11,6 @@ from typing import List
 
 router = APIRouter()
 
-
-
 @router.get("/", response_model=list[LesaoResponse])
 def listar_lesoes(db: Session = Depends(get_db)):
     resultados = db.query(

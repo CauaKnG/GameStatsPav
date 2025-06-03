@@ -1,11 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Boolean, Date
 from sqlalchemy.orm import relationship
 from app.core.database import Base
-import enum
-
-class TipoCartaoEnum(enum.Enum):
-    amarelo = 'amarelo'
-    vermelho = 'vermelho'
+from sqlalchemy import Enum as SqlEnum
+from app.schemas.falta_schema import TipoCartaoEnum
 
 class Liga(Base):
     __tablename__ = 'ligas'
@@ -85,9 +82,10 @@ class Falta(Base):
     id = Column(Integer, primary_key=True, index=True)
     jogador_id = Column(Integer, ForeignKey('jogadores.id'))
     partida_id = Column(Integer, ForeignKey('partidas.id'))
-    tipo_cartao = Column(Enum(TipoCartaoEnum))
+    tipo_cartao = Column(SqlEnum(TipoCartaoEnum, name="tipocartaoenum"), nullable=False)
     minuto_ocorrido = Column(Integer)
     dentro_area = Column(Boolean)
+    descricao = Column(String) 
 
     jogador = relationship("Jogador", back_populates="faltas")
     partida = relationship("Partida", back_populates="faltas")

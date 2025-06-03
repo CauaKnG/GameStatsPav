@@ -90,19 +90,11 @@ def formatar_partida_response(partida: Partida) -> PartidaResponse:
     )
 
 def deletar_partida(partida_id: int, db: Session):
-    partida = db.query(Partida).options(joinedload(Partida.clube_casa)).filter(Partida.id == partida_id).first()
-    if not partida:
-        raise HTTPException(status_code=404, detail="Partida não encontrada")
-    db.delete(partida)
-    db.commit()
-    return formatar_partida_response(partida)
-
-def deletar_partida(partida_id: int, db: Session):
     partida = db.query(Partida).options(joinedload(Partida.clube_casa), joinedload(Partida.clube_fora)).filter(Partida.id == partida_id).first()
     if not partida:
         raise HTTPException(status_code=404, detail="Partida não encontrada")
     
-    partida_response = formatar_partida_response(partida)  # formato antes de deletar
+    partida_response = formatar_partida_response(partida)  
     db.delete(partida)
     db.commit()
     return partida_response
