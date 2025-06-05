@@ -8,9 +8,13 @@ class EstatisticasJogadorBase(BaseModel):
     finalizacoes: int
     partida_id: int
 
-class EstatisticasJogadorCreate(EstatisticasJogadorBase):
-    pass
-
+class EstatisticasJogadorCreate(BaseModel):
+    nome_jogador: str
+    gols: int
+    assistencias: int
+    passes_completos: int
+    finalizacoes: int
+    partida_id: int
 class EstatisticasJogadorUpdate(BaseModel):
     nome_jogador: str
     gols: int
@@ -18,7 +22,7 @@ class EstatisticasJogadorUpdate(BaseModel):
     passes_completos: int
     finalizacoes: int
 
-class EstatisticasJogadorResponse(EstatisticasJogadorBase):
+class EstatisticasJogadorResponse(EstatisticasJogadorCreate):
     id: int
 
     class Config:

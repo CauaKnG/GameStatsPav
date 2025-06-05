@@ -10,7 +10,7 @@ router = APIRouter()
 def listar_estatisticas(db: Session = Depends(get_db)):
     return estatisticas_jogador_service.listar_estatisticas_jogador(db)
 
-@router.get("/jogador/{jogador_id}", response_model=list[estatisticas_jogador_schema.EstatisticasJogadorResponse])
+@router.get("/{jogador_id}", response_model=list[estatisticas_jogador_schema.EstatisticasJogadorResponse])
 def buscar_estatisticas_por_jogador(jogador_id: int, db: Session = Depends(get_db)):
     estatisticas = estatisticas_jogador_service.buscar_estatisticas_por_jogador(jogador_id, db)
     if not estatisticas:
@@ -21,12 +21,13 @@ def buscar_estatisticas_por_jogador(jogador_id: int, db: Session = Depends(get_d
 def criar_estatisticas(estatisticas: estatisticas_jogador_schema.EstatisticasJogadorCreate, db: Session = Depends(get_db)):
     return estatisticas_jogador_service.criar_estatisticas_jogador(estatisticas, db)
 
-@router.put("/{estatisticas_id}", response_model=estatisticas_jogador_schema.EstatisticasJogadorResponse)
-def atualizar_estatisticas(estatisticas_id: int, estatisticas: estatisticas_jogador_schema.EstatisticasJogadorUpdate, db: Session = Depends(get_db)):
-    estatisticas_atualizadas = estatisticas_jogador_service.atualizar_estatisticas_jogador(estatisticas_id, estatisticas, db)
-    if not estatisticas_atualizadas:
-        raise HTTPException(status_code=404, detail="Estatísticas não encontradas")
-    return estatisticas_atualizadas
+@router.put("/{estatistica_id}")
+def atualizar_estatisticas(
+    estatistica_id: int,
+    estatisticas: estatisticas_jogador_schema.EstatisticasJogadorCreate,
+    db: Session = Depends(get_db)
+):
+    return estatisticas_jogador_service.atualizar_estatisticas_jogador(estatistica_id, estatisticas, db)
 
 @router.delete("/{estatisticas_id}", response_model=estatisticas_jogador_schema.EstatisticasJogadorResponse)
 def deletar_estatisticas(estatisticas_id: int, db: Session = Depends(get_db)):
