@@ -31,6 +31,11 @@ def atualizar_liga(liga_id: int, liga: liga_schema.LigaUpdate, db: Session = Dep
 @router.delete("/{liga_id}", response_model=liga_schema.LigaResponse)
 def deletar_liga(liga_id: int, db: Session = Depends(get_db)):
     liga = liga_service.deletar_liga(liga_id, db)
-    if not liga:
+    
+    if liga is None:
         raise HTTPException(status_code=404, detail="Liga não encontrada")
+
+    if liga == "liga_possui_clubes":
+        raise HTTPException(status_code=400, detail="Não é possível excluir uma liga com clubes associados")
+
     return liga

@@ -37,6 +37,12 @@ def atualizar_clube(clube_id: int, clube: ClubeUpdate, db: Session):
     if clube.cidade is not None:
         clube_existente.cidade = clube.cidade
 
+    if clube.nome_liga is not None:
+        liga = db.query(Liga).filter(Liga.nome == clube.nome_liga).first()
+        if not liga:
+            raise ValueError(f"Liga com nome '{clube.nome_liga}' não existe")
+        clube_existente.liga_id = liga.id
+
     db.commit()
     db.refresh(clube_existente)
     return clube_existente

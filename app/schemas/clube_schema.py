@@ -17,8 +17,9 @@ class ClubeCreate(BaseModel):
     nome_liga: str = Field(..., example="Brasileirão")
 
 class ClubeUpdate(BaseModel):
-    nome: Optional[str] = Field(None, example="Fluminense")
-    cidade: str = Field(..., example="Rio de Janeiro")
+    nome: Optional[str] = Field(None, example="Barcelona")
+    cidade: Optional[str] = Field(None, example="Barcelona")
+    nome_liga: Optional[str] = Field(None, example="La Liga") 
 
 class ClubeResponse(BaseModel):
     id: int

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.models import Liga
+from app.models.models import Clube, Liga
 from app.schemas.liga_schema import LigaCreate, LigaUpdate
 
 def listar_ligas(db: Session):
@@ -31,6 +31,10 @@ def deletar_liga(liga_id: int, db: Session):
     db_liga = buscar_liga_por_id(liga_id, db)
     if not db_liga:
         return None
+
+    clubes_associados = db.query(Clube).filter(Clube.liga_id == liga_id).first()
+    if clubes_associados:
+        return "liga_possui_clubes"
 
     db.delete(db_liga)
     db.commit()
