@@ -9,7 +9,7 @@ class JogadorSimples(BaseModel):
         orm_mode = True
 
 class LesaoBase(BaseModel):
-    nome_jogador: str = Field(..., example="Neymar Jr")  # antes era jogador_id
+    nome_jogador: str = Field(..., example="Neymar Jr")  
     tipo_lesao: str = Field(..., example="Lesão muscular")
     data_lesao: date = Field(..., example="2025-07-15")
     duracao_estimada_dias: int = Field(..., example=30)
@@ -31,10 +31,11 @@ class LesaoUpdate(BaseModel):
 
 class LesaoResponse(BaseModel):
     id: int
-    jogador_id: int
+    nome_jogador: str
     tipo_lesao: str
     data_lesao: date
-    nome_jogador: str
+    duracao_estimada_dias: int 
+    jogador_id: int
 
     class Config:
         orm_mode = True

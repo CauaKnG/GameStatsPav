@@ -31,6 +31,7 @@ def buscar_lesao_por_id(lesao_id: int, db: Session = Depends(get_db)):
         Lesao.jogador_id,
         Lesao.tipo_lesao,
         Lesao.data_lesao,
+        Lesao.duracao_estimada_dias,
         Jogador.nome.label("nome_jogador")
     ).join(Jogador, Lesao.jogador_id == Jogador.id).filter(Lesao.id == lesao_id).first()
 

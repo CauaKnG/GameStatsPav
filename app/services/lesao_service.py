@@ -32,6 +32,7 @@ def criar_lesao(lesao_dados: lesao_schema.LesaoCreate, db: Session):
         Lesao.jogador_id,
         Lesao.tipo_lesao,
         Lesao.data_lesao,
+        Lesao.duracao_estimada_dias,
         Jogador.nome.label("nome_jogador")
     ).join(Jogador, Lesao.jogador_id == Jogador.id).filter(Lesao.id == nova_lesao.id).first()
 
@@ -52,6 +53,7 @@ def atualizar_lesao(lesao_id: int, dados_atualizados: dict, db: Session):
         Lesao.jogador_id,
         Lesao.tipo_lesao,
         Lesao.data_lesao,
+        Lesao.duracao_estimada_dias,
         Jogador.nome.label("nome_jogador")
     ).join(Jogador, Lesao.jogador_id == Jogador.id).filter(Lesao.id == lesao_id).first()
 
@@ -65,6 +67,7 @@ def deletar_lesao(lesao_id: int, db: Session):
         Lesao.jogador_id,
         Lesao.tipo_lesao,
         Lesao.data_lesao,
+        Lesao.duracao_estimada_dias,
         Jogador.nome.label("nome_jogador")
     ).join(Jogador, Lesao.jogador_id == Jogador.id).filter(Lesao.id == lesao_id).first()
 
