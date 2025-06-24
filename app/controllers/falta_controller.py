@@ -33,7 +33,7 @@ def buscar_falta(falta_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/")
-def criar_falta(falta: FaltaCreate, db: Session = Depends(get_db)):
+def criar_falta(falta: falta_schema.FaltaCreate, db: Session = Depends(get_db)):
     jogador = db.query(Jogador).filter(Jogador.nome == falta.nome_jogador).first()
     if not jogador:
         raise HTTPException(status_code=404, detail="Jogador não encontrado")
@@ -54,20 +54,7 @@ def criar_falta(falta: FaltaCreate, db: Session = Depends(get_db)):
     agora = datetime.now()
     partida_mais_proxima = min(partidas, key=lambda p: abs((p.data_partida - agora).total_seconds()))
 
-    nova_falta_data = {
-        "jogador_id": jogador.id,
-        "partida_id": partida_mais_proxima.id,
-        "minuto_ocorrido": falta.minuto_ocorrido,
-        "tipo_cartao": falta.tipo_cartao,
-        "descricao": falta.descricao,
-        "dentro_area": falta.dentro_area
-    }
-
-    nova_falta = falta_service.criar_falta(nova_falta_data, db)
-
-    db.add(nova_falta)
-    db.commit()
-    db.refresh(nova_falta)
+    nova_falta = falta_service.criar_falta(falta, jogador.id, partida_mais_proxima.id, db)
 
     return falta_to_response(nova_falta)
 

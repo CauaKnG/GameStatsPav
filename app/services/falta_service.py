@@ -9,12 +9,20 @@ def listar_faltas(db: Session):
 def buscar_falta_por_id(falta_id: int, db: Session):
     return db.query(Falta).filter(Falta.id == falta_id).first()
 
-def criar_falta(dados_falta: dict, db: Session):
-    db_falta = Falta(**dados_falta)
+def criar_falta(falta: FaltaCreate, jogador_id: int, partida_id: int, db: Session):
+    db_falta = Falta(
+        jogador_id=jogador_id,
+        partida_id=partida_id,
+        minuto_ocorrido=falta.minuto_ocorrido,
+        tipo_cartao=falta.tipo_cartao,
+        descricao=falta.descricao,
+        dentro_area=falta.dentro_area
+    )
     db.add(db_falta)
     db.commit()
     db.refresh(db_falta)
     return db_falta
+
 
 def atualizar_falta(falta_id: int, falta_update: FaltaUpdate, db: Session):
     falta = db.query(Falta).filter(Falta.id == falta_id).first()
