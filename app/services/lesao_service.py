@@ -16,6 +16,9 @@ def criar_lesao(lesao_dados: lesao_schema.LesaoCreate, db: Session):
     jogador = db.query(Jogador).filter(Jogador.nome == lesao_dados.nome_jogador).first()
     if not jogador:
         raise HTTPException(status_code=404, detail="Jogador não encontrado")
+    
+    validar_duracao_lesao(lesao_dados)
+    validar_data_lesao(lesao_dados)
 
     nova_lesao = Lesao(
         jogador_id=jogador.id,
@@ -42,6 +45,19 @@ def atualizar_lesao(lesao_id: int, dados_atualizados: dict, db: Session):
     if not db_lesao:
         return None
 
+    tipo_lesao = dados_atualizados.get("tipo_lesao", db_lesao.tipo_lesao)
+    data_lesao = dados_atualizados.get("data_lesao", db_lesao.data_lesao)
+    duracao_estimada_dias = dados_atualizados.get("duracao_estimada_dias", db_lesao.duracao_estimada_dias)
+
+    class LesaoTemp:
+        def __init__(self, data_lesao, duracao_estimada_dias):
+            self.data_lesao = data_lesao
+            self.duracao_estimada_dias = duracao_estimada_dias
+
+    lesao_temp = LesaoTemp(data_lesao, duracao_estimada_dias)
+    validar_duracao_lesao(lesao_temp)
+    validar_data_lesao(lesao_temp)
+
     for campo, valor in dados_atualizados.items():
         setattr(db_lesao, campo, valor)
 
@@ -56,6 +72,7 @@ def atualizar_lesao(lesao_id: int, dados_atualizados: dict, db: Session):
         Lesao.duracao_estimada_dias,
         Jogador.nome.label("nome_jogador")
     ).join(Jogador, Lesao.jogador_id == Jogador.id).filter(Lesao.id == lesao_id).first()
+
 
 def deletar_lesao(lesao_id: int, db: Session):
     lesao = db.query(Lesao).filter(Lesao.id == lesao_id).first()

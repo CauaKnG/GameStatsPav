@@ -1,12 +1,13 @@
 from app.models.models import Jogador, EstatisticaJogador, Lesao
 from app.validators import (
     validar_estatisticas, validar_participacao_jogador,
-    validar_duracao_lesao, validar_posicao
+    validar_posicao, validar_clube_unico
 )
 from sqlalchemy.orm import Session
 
 def adicionar_jogador(db: Session, jogador: Jogador):
     validar_posicao(jogador.posicao)
+    validar_clube_unico(jogador.nome, jogador.clube_id, db)
     db.add(jogador)
     db.commit()
     db.refresh(jogador)

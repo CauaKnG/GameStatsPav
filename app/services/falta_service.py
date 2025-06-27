@@ -10,6 +10,9 @@ def buscar_falta_por_id(falta_id: int, db: Session):
     return db.query(Falta).filter(Falta.id == falta_id).first()
 
 def criar_falta(falta: FaltaCreate, jogador_id: int, partida_id: int, db: Session):
+
+    validar_falta(falta)
+
     db_falta = Falta(
         jogador_id=jogador_id,
         partida_id=partida_id,
@@ -33,11 +36,27 @@ def atualizar_falta(falta_id: int, falta_update: FaltaUpdate, db: Session):
     if not jogador:
         raise Exception("Jogador não encontrado")
 
+    class FaltaTemp:
+        def __init__(self, minuto_ocorrido):
+            self.minuto_ocorrido = minuto_ocorrido
+
+    minuto_para_validar = (
+        falta_update.minuto_ocorrido 
+        if falta_update.minuto_ocorrido is not None 
+        else falta.minuto_ocorrido
+    )
+
+    validar_falta(FaltaTemp(minuto_para_validar))
+
     falta.jogador_id = jogador.id
-    falta.minuto_ocorrido = falta_update.minuto_ocorrido
-    falta.tipo_cartao = falta_update.tipo_cartao
-    falta.descricao = falta_update.descricao
-    falta.dentro_area = falta_update.dentro_area
+    if falta_update.minuto_ocorrido is not None:
+        falta.minuto_ocorrido = falta_update.minuto_ocorrido
+    if falta_update.tipo_cartao is not None:
+        falta.tipo_cartao = falta_update.tipo_cartao
+    if falta_update.descricao is not None:
+        falta.descricao = falta_update.descricao
+    if falta_update.dentro_area is not None:
+        falta.dentro_area = falta_update.dentro_area
 
     db.commit()
     db.refresh(falta)  

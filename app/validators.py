@@ -42,13 +42,11 @@ def validar_exclusao_clube(clube_id, db: Session):
     if jogadores:
         raise ValueError("Não é possível excluir um clube com jogadores associados.")
 
-def validar_clube_unico(jogador_id, db: Session):
-    jogador = db.query(Jogador).filter(Jogador.id == jogador_id).first()
-    if jogador:
-        clube_atual = jogador.clube_id
-        jogadores_no_clube = db.query(Jogador).filter(Jogador.clube_id == clube_atual).all()
-        if len(jogadores_no_clube) > 1:
-            raise ValueError("Jogador não pode estar em mais de um clube simultaneamente.")
+def validar_clube_unico(nome_jogador: str, clube_id: int, db: Session):
+    jogador_existente = db.query(Jogador).filter(Jogador.nome == nome_jogador).first()
+
+    if jogador_existente and jogador_existente.clube_id != clube_id:
+        raise ValueError(f"O jogador '{nome_jogador}' já pertence ao clube com ID {jogador_existente.clube_id}.")
 
 def validar_data_lesao(lesao):
     if lesao.data_lesao > date.today():
